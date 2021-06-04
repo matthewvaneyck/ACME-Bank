@@ -1,0 +1,25 @@
+<table class="table table-items" cellpadding="8" cellspacing="2">
+  <thead>
+    <tr class="table-headers">
+      <th>Account Number</th>
+      <th>Account Type</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <ng-container *ngFor="let account of accountList; let i = index;">
+    <tr>
+      <td>{{account.account_number}}</td>
+      <td>{{account.account_type}}</td>
+      <td>{{account.balance | number : '1.2-2' }}</td>
+      <td>
+        <button class="withdraw-button" [ngClass]="{'disable-withdraw-button': !account.canWithdraw}" mat-icon-button (click)="withdraw(account, i)">
+          <mat-icon *ngIf="account.canWithdraw">check_circle_outline</mat-icon>
+          <mat-icon *ngIf="!account.canWithdraw">block</mat-icon>
+          <span>withdraw</span>
+        </button>
+      </td>
+    </tr>
+  </ng-container>
+</table>
+
+<span class="balance-total">Balance: ZAR {{totalBalance | number : '1.2-2' }}</span>

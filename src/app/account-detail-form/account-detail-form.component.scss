@@ -1,0 +1,46 @@
+.table {
+  width: 100%;
+  margin: 20px auto;
+}
+
+.table tr td:not(.actions), th:not(.actions) {
+  text-align: left;
+}
+
+.table tr td {
+  border: 1px solid #ededed;
+  padding: 2px 0px;
+  text-indent: 5px;
+}
+
+.table tr:nth-child(odd) {
+  background: #F0F0F0;
+}
+
+tr .actions, tr .actions {
+  text-align: center;
+}
+
+.withdraw-button {
+  color: white;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+}
+
+.disable-withdraw-button {
+  background-color: grey;
+  cursor: not-allowed;
+  padding: 5px;
+  margin: 5px;
+}
+
+.balance-total {
+  display: flex;
+  background-color: lightgrey;
+  padding: 10px;
+  width: 99%;
+}
