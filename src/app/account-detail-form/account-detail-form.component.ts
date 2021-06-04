@@ -33,6 +33,7 @@ export class AccountDetailFormComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
+        if (!result.updatedBalance) { return; }
         if (+result.updatedBalance > +result.balance) {
           this._snackBar.openFromComponent(SnackbarComponent, {
             duration: 4500,
