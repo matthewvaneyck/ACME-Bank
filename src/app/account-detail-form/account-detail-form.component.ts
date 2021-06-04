@@ -33,8 +33,15 @@ export class AccountDetailFormComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
-        if (!result.updatedBalance) { return; }
-        if (+result.updatedBalance > +result.balance) {
+        if (!result.updatedBalance) {
+          return;
+        }
+
+        const pendingBalance = +result.balance - +result.updatedBalance;
+        if (
+          +pendingBalance > +result.balance &&
+          result.account_type !== AccountType.savings
+        ) {
           this._snackBar.openFromComponent(SnackbarComponent, {
             duration: 4500,
             data: `Unable to withdraw ${result.updatedBalance} because your balance is ${result.balance}`,
@@ -42,7 +49,7 @@ export class AccountDetailFormComponent implements OnInit {
           });
           return;
         }
-        result.balance = +result.balance - +result.updatedBalance;
+        result.balance = +pendingBalance;
 
         if (result.account_type === AccountType.savings) {
           this.accountList[index].balance = result.balance;
@@ -51,16 +58,20 @@ export class AccountDetailFormComponent implements OnInit {
             data: 'Withdraw successful',
             horizontalPosition: 'center',
           });
-        }
-
-        if (
-          result.account_type === AccountType.cheque &&
+        } else if (
+          (result.account_type === AccountType.cheque && +result.balance > 0) ||
           +result.balance >= -500
         ) {
           this.accountList[index].balance = result.balance;
           this._snackBar.openFromComponent(SnackbarComponent, {
             duration: 4500,
             data: 'Withdraw successful',
+            horizontalPosition: 'center',
+          });
+        } else {
+          this._snackBar.openFromComponent(SnackbarComponent, {
+            duration: 4500,
+            data: 'Withdrawal unsuccessful',
             horizontalPosition: 'center',
           });
         }
