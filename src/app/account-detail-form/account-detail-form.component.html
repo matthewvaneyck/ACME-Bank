@@ -12,10 +12,9 @@
       <td>{{account.account_type}}</td>
       <td>{{account.balance | number : '1.2-2' }}</td>
       <td>
-        <button class="withdraw-button" [ngClass]="{'disable-withdraw-button': !account.canWithdraw}" mat-icon-button (click)="withdraw(account, i)">
-          <mat-icon *ngIf="account.canWithdraw">check_circle_outline</mat-icon>
+        <button class="withdraw-button" *ngIf="account.canWithdraw" mat-icon-button (click)="withdraw(account, i)">
           <mat-icon *ngIf="!account.canWithdraw">block</mat-icon>
-          <span>withdraw</span>
+          <span>WITHDRAW</span>
         </button>
       </td>
     </tr>
