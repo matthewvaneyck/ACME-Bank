@@ -39,46 +39,42 @@ export class AccountDetailFormComponent implements OnInit {
 
         const pendingBalance = +result.balance - +result.updatedBalance;
         if (
-          +pendingBalance > +result.balance &&
-          result.account_type !== AccountType.savings
+          pendingBalance <= 0 &&
+          result.account_type === AccountType.savings
         ) {
-          this._snackBar.openFromComponent(SnackbarComponent, {
-            duration: 4500,
-            data: `Unable to withdraw ${result.updatedBalance} because your balance is ${result.balance}`,
-            horizontalPosition: 'center',
-          });
+          const msg = `Unable to withdraw R${result.updatedBalance} because your balance is R${result.balance}`;
+          this.withdrawelResponse(msg);
+          return;
+        } else if (result.account_type === AccountType.savings) {
+          this.accountList[index].balance = result.balance;
+          const msg = 'Withdraw successful';
+          this.withdrawelResponse(msg);
+          this.accountBalanceValidation();
           return;
         }
-        result.balance = +pendingBalance;
 
-        if (result.account_type === AccountType.savings) {
-          this.accountList[index].balance = result.balance;
-          this._snackBar.openFromComponent(SnackbarComponent, {
-            duration: 4500,
-            data: 'Withdraw successful',
-            horizontalPosition: 'center',
-          });
-        } else if (
-          (result.account_type === AccountType.cheque && +result.balance > 0) ||
-          +result.balance >= -500
+        if (
+          result.account_type === AccountType.cheque &&
+          !(pendingBalance < -500)
         ) {
-          this.accountList[index].balance = result.balance;
-          this._snackBar.openFromComponent(SnackbarComponent, {
-            duration: 4500,
-            data: 'Withdraw successful',
-            horizontalPosition: 'center',
-          });
+          this.accountList[index].balance = pendingBalance.toString();
+          const msg = 'Withdraw successful';
+          this.withdrawelResponse(msg);
+          this.accountBalanceValidation();
         } else {
-          this._snackBar.openFromComponent(SnackbarComponent, {
-            duration: 4500,
-            data: 'Withdrawal unsuccessful',
-            horizontalPosition: 'center',
-          });
+          const msg = `Unable to withdraw R${result.updatedBalance} because your balance is R${result.balance}`;
+          this.withdrawelResponse(msg);
         }
-
-        this.accountBalanceValidation();
       });
     }
+  }
+
+  withdrawelResponse(message: string) {
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: 4500,
+      data: message,
+      horizontalPosition: 'center',
+    });
   }
 
   accountBalanceValidation(): void {
