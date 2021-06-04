@@ -91,7 +91,7 @@ export class AccountDetailFormComponent implements OnInit {
           break;
         case AccountType.cheque:
           item.canWithdraw =
-            +item.balance > 0 || +item.balance >= -500 ? true : false;
+            +item.balance > 0 || +item.balance >= -501 ? true : false;
           break;
       }
     });
