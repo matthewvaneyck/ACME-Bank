@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccountDetails, AccountType } from '../accounts.service';
 import { DialogPopupComponent } from '../dialog-popup/dialog-popup.component';
+import { AccountDetails, AccountType } from '../models/accounts';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 @Component({
@@ -15,15 +15,18 @@ export class AccountDetailFormComponent implements OnInit {
   dataSource: AccountDetails;
   AcountType = AccountType;
   totalBalance = 0;
-  constructor(private _snackBar: MatSnackBar, public dialog: MatDialog) {}
+  // tslint:disable-next-line:variable-name
+  constructor(private _snackBar: MatSnackBar, private _dialog: MatDialog) {}
 
   ngOnInit(): void {
+    // Validates if the user can withdraw
     this.accountBalanceValidation();
   }
 
   withdraw(accountItem: AccountDetails, index: number): void {
+    // Initiate withdrawal process
     if (accountItem.canWithdraw) {
-      const dialogRef = this.dialog.open(DialogPopupComponent, {
+      const dialogRef = this._dialog.open(DialogPopupComponent, {
         width: '250px',
         data: {
           account_type: accountItem.account_type,
@@ -43,12 +46,12 @@ export class AccountDetailFormComponent implements OnInit {
           result.account_type === AccountType.savings
         ) {
           const msg = `Unable to withdraw R${result.updatedBalance} because your balance is R${result.balance}`;
-          this.withdrawelResponse(msg);
+          this.withdrawalResponse(msg);
           return;
         } else if (result.account_type === AccountType.savings) {
           this.accountList[index].balance = result.balance;
           const msg = 'Withdraw successful';
-          this.withdrawelResponse(msg);
+          this.withdrawalResponse(msg);
           this.accountBalanceValidation();
           return;
         }
@@ -59,17 +62,17 @@ export class AccountDetailFormComponent implements OnInit {
         ) {
           this.accountList[index].balance = pendingBalance.toString();
           const msg = 'Withdraw successful';
-          this.withdrawelResponse(msg);
+          this.withdrawalResponse(msg);
           this.accountBalanceValidation();
         } else {
           const msg = `Unable to withdraw R${result.updatedBalance} because your balance is R${result.balance}`;
-          this.withdrawelResponse(msg);
+          this.withdrawalResponse(msg);
         }
       });
     }
   }
 
-  withdrawelResponse(message: string) {
+  withdrawalResponse(message: string) {
     this._snackBar.openFromComponent(SnackbarComponent, {
       duration: 4500,
       data: message,

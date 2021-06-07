@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AccountDetails } from './models/accounts';
 import { SnackbarComponent } from './snackbar/snackbar.component';
 
 @Injectable({
@@ -18,10 +19,11 @@ export class AccountsService {
     this.accountsData = items;
   }
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar) {}
+  // tslint:disable-next-line:variable-name
+  constructor(private _http: HttpClient, private _snackBar: MatSnackBar) {}
 
   async getAccountList(): Promise<AccountDetails> {
-    await this.http
+    await this._http
       .get<AccountDetails>(this.URL)
       .toPromise()
       .then((response) => {
@@ -39,14 +41,4 @@ export class AccountsService {
   }
 }
 
-export interface AccountDetails {
-  account_number: string;
-  account_type: AccountType;
-  balance: string;
-  canWithdraw?: boolean;
-}
 
-export enum AccountType {
-  cheque = 'cheque',
-  savings = 'savings',
-}
